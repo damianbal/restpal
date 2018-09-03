@@ -106,8 +106,10 @@ axios.delete('http://laravel-app.com/resource/Article/4') // delete article with
 
 ## Installing
 
+### Composer
+
 ```sh
-composer require damianbal\restpal
+composer require damianbal/laravel-restpal
 ```
 
 ```sh
