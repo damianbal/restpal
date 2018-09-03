@@ -150,7 +150,7 @@ class RestpalController extends BaseController
             if (auth('api')->user()->can('update', $this->restpal->getModelById($model, $id))) {
                 $model = $this->restpal->updateModel($model, $id, $request->all(), $validator);
 
-                if ($model != false)
+                if ($model != false || $model > 0)
                 {
                     return ['success' => true];
                 }
@@ -171,12 +171,14 @@ class RestpalController extends BaseController
                 }
                 else
                 {
-                    return $this->restpal->updateModel($model, $id, $request->all());
+                    $r = $this->restpal->updateModel($model, $id, $request->all());
+                    return ['success' => ($r != false || $r > 0) ? true : false];
                 }
             }
             else // no validator so update without validation
             {
-                return ['success' => $this->restpal->updateModel($model, $id, $request->all())];
+                $r = $this->restpal->updateModel($model, $id, $request->all());
+                return ['success' => ($r != false || $r > 0) ? true : false];
             }
 
         }

@@ -58,7 +58,7 @@ class Restpal
         if($validator != null)
         {
             if ($validator->fails()) {
-                return false;
+                return null;
             }
             else
             {
