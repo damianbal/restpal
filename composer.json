@@ -1,0 +1,25 @@
+{
+    "name": "damianbal/laravel-restpal",
+    "description": "RESTful Laravel",
+    "authors": [
+        {
+            "name": "Damian",
+            "email": "balandowski@icloud.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "damianbal\\Restpal\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "damianbal\\Restpal\\RestpalServiceProvider"
+            ]
+        }
+    },
+        "require": {
+            "illuminate/support": "~5"
+        }
+}
