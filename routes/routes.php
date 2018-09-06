@@ -12,3 +12,6 @@ Route::patch('/resource/{model}/{id}', 'damianbal\\Restpal\\RestpalController@re
 // Route::put('/resource/{model}/{id}', 'damianbal\\Restpal\\RestpalController@restPut');
 Route::delete('/resource/{model}/{id}', 'damianbal\\Restpal\\RestpalController@restDelete');
 
+// Relational
+Route::get('/resource/{model}/{id}/{relation}', 'damianbal\\Restpal\\RestpalController@restRelationGet');
+Route::post('/resource/{model}/{id}/{relation}', 'damianbal\\Restpal\\RestpalController@restRelationPost');

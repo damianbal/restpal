@@ -1,9 +1,14 @@
 <?php
 
+/**
+ * Restpal
+ *
+ * @author Damian Balandowski (balandowski@icloud.com)
+ */
+
 namespace damianbal\Restpal;
 
 use Illuminate\Support\Facades\Schema;
-
 
 class Restpal
 {
@@ -58,7 +63,7 @@ class Restpal
         if($validator != null)
         {
             if ($validator->fails()) {
-                return null;
+                return false;
             }
             else
             {
@@ -113,6 +118,11 @@ class Restpal
         $m = "App\\" . $model;
 
         $order = strtoupper($order);
+
+        if($perPage == 0)
+        {
+            return ['data' => $m::orderBy($sortBy, $order)->get()];
+        }
 
         return $m::orderBy($sortBy, $order)->paginate($perPage);
     }

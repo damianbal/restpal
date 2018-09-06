@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Restpal
+ *
+ * @author Damian Balandowski (balandowski@icloud.com)
+ */
+
 namespace damianbal\Restpal;
 
 use Illuminate\Http\Request;
@@ -23,6 +29,113 @@ class RestpalController extends BaseController
     }
 
     /**
+     * Relational get, returns relation data from model with ID
+     *
+     * @param Request $request
+     * @param string $model
+     * @param integer $id
+     * @param string $relation
+     * @return mixed
+     */
+    public function restRelationGet(Request $request, $model, $id, $relation)
+    {
+        if (!class_exists("App\\" . $model)) {
+            return ['error' => true, 'message' => 'Model does not exist!'];
+        }
+
+        $rc = new \ReflectionClass("App\\".$model);
+
+        if(!$rc->hasMethod($relation))
+        {
+            return ['error' => true, 'message' => 'Relation does not exist!'];
+        }
+
+        $sortBy = $request->input('sortBy', 'created_at');
+        $sortOrder = $request->input('sortOrder', 'DESC');
+        $perPage = $request->input('perPage', config('restpal.default_perPage', 5));
+
+        $m = $this->restpal->getModelById($model, $id);
+        $relatedModel = explode('\\', get_class($m->{$relation}()->getRelated()))[1];
+
+
+        $m = $this->restpal->getModelById($model, $id);
+        //$rd = $m->{$relation}()->get();
+        $rd = $m->{$relation}()->orderBy($sortBy, $sortOrder)->paginate($perPage);
+        $res = $this->restpal->getModelResource($model);
+
+        // if page is set to -1 then return all items
+        if($request->input('page') == -1)
+        {
+            return ['data' => $m->{$relation}()->orderBy($sortBy, $sortOrder)->get()];
+        }
+
+        return $rd;
+    }
+
+    /**
+     * Relational post, create data on relation from model
+     *
+     * @param Request $request
+     * @param string $model
+     * @param integer $id
+     * @param string $relation
+     * @return mixed
+     */
+    public function restRelationPost(Request $request, $model, $id, $relation)
+    {
+        if (!class_exists("App\\" . $model)) {
+            return ['error' => true, 'message' => 'Model does not exist!'];
+        }
+
+        $rc = new \ReflectionClass("App\\".$model);
+
+        if(!$rc->hasMethod($relation))
+        {
+            return ['error' => true, 'message' => 'Relation does not exist!'];
+        }
+
+        $data = $request->all();
+
+        $m = $this->restpal->getModelById($model, $id);
+        $rel = $m->{$relation}();
+
+
+        $relatedModel = explode('\\', get_class($m->{$relation}()->getRelated()))[1];
+
+        // Check if user can create it
+        if(class_exists($this->restpal->getPolicyNameForModel($relatedModel)))
+        {
+            if(auth('api')->user() == null)
+            {
+                return ['error' => true, 'message' => 'Not signed in!'];
+            }
+
+            if(!auth('api')->user()->can('create', "App\\" . $relatedModel))
+            {
+                return ['error' => true, 'message' => 'Not authorized!'];
+            }
+        }
+
+        $validator = $this->restpalConfig->getValidator($relatedModel, 'create', $request->all());
+
+        if($validator != null)
+        {
+            if($validator->fails())
+            {
+                return ['error' => true, 'message' => 'Validation error!'];
+            }
+            else
+            {
+                return $rel->create($data);
+            }
+        }
+        else
+        {
+            return $rel->create();
+        }
+    }
+
+    /**
      * GET
      *
      * @param Request $request
@@ -38,7 +151,7 @@ class RestpalController extends BaseController
 
         if (!class_exists("App\\" . $model))
         {
-            return ['message' => 'Model does not exist!'];
+            return ['error' => true, 'message' => 'Model does not exist!'];
         }
 
         if ($id != null)
@@ -84,6 +197,11 @@ class RestpalController extends BaseController
      */
     public function restPost(Request $request, $model)
     {
+        if (!class_exists("App\\" . $model))
+        {
+            return ['error' => true, 'message' => 'Model does not exist!'];
+        }
+
         $validator = $this->restpalConfig->getValidator($model, 'create', $request->all());
 
         // if there is Policy for that model then check if user can post to that model
@@ -136,6 +254,11 @@ class RestpalController extends BaseController
      */
     public function restPatch(Request $request, $model, $id)
     {
+        if (!class_exists("App\\" . $model))
+        {
+            return ['error' => true, 'message' => 'Model does not exist!'];
+        }
+
         $validator = $this->restpalConfig->getValidator($model, 'update', $request->all());
 
 
@@ -200,6 +323,11 @@ class RestpalController extends BaseController
      */
     public function restDelete(Request $request, $model, $id)
     {
+        if (!class_exists("App\\" . $model))
+        {
+            return ['error' => true, 'message' => 'Model does not exist!'];
+        }
+
         if (class_exists($this->restpal->getPolicyNameForModel($model)))
         {
             if (auth('api')->user() == null) {

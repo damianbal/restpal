@@ -14,6 +14,8 @@ routes for specific Models. See Example section to see how easy it is!
 * POST /resource/{model} - create new item
 * PATCH /resource/{model}/{id} - update item 
 * DELETE /resource/{model}/{id} - removes item 
+* GET /resources/{model}/{id}/{relation} - get relation data from Model
+* POST /resource/{model}/{id}/{relation} - post data to relation
 
 ### Policies
 
@@ -102,6 +104,36 @@ axios.patch('http://laravel-app.com/resource/Article/' + articleId, newData)
 And of course to delete (as easy to guess) would be
 ```js
 axios.delete('http://laravel-app.com/resource/Article/4') // delete article with id of 4
+```
+
+### Relation example
+
+Lets say that our Model has relation which gets comments which belong to our Article
+
+```php
+public function comments()
+{
+    return $this->hasMany('App\Comment');
+}
+```
+
+We can access that with Restpal :)
+
+To post new comment in Article with id 3 we would do
+```js
+axios.post('http://laravel-app.com/resource/Article/3/comments', {
+    message: "This article is great!",
+}).then(resp => {
+    // comment posted
+})
+```
+
+to get all the comments of article we would do that instead
+
+```js
+axios.get('http://laravel-app.com/resource/Article/3/comments').then(resp => {
+    // ...
+})
 ```
 
 ## Installing
