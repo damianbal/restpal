@@ -9,7 +9,7 @@ routes for specific Models. See Example section to see how easy it is!
 
 ### Routes
 
-* GET /resource/MODEL?page=X&sortBy=column_name&sortOrder=DESC|ASC&perPage=3 - lists all items from model
+* GET /resource/{model}?page=X&sortBy=column_name&sortOrder=DESC|ASC&perPage=3 - lists all items from model
 * GET /resource/{model}/{id} - lists only one item by id
 * POST /resource/{model} - create new item
 * PATCH /resource/{model}/{id} - update item 
@@ -132,7 +132,7 @@ to get all the comments of article we would do that instead
 
 ```js
 axios.get('http://laravel-app.com/resource/Article/3/comments').then(resp => {
-    // ...
+    console.log(resp.data.data) // comments of Article with id of 3
 })
 ```
 
