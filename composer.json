@@ -19,7 +19,7 @@
             ]
         }
     },
-        "require": {
+    "require": {
             "illuminate/support": "~5"
-        }
+    }
 }

@@ -2,6 +2,9 @@
 
 Consume and Manipulate your Laravel models restfully, make your API development happy!
 
+Note: Best way to use Restpal is to only list data with it and create only not so sensitive resources 
+if you are creating resource the best way is to do it by yourself in some controller.
+
 ## Getting Started
 
 RestPal lets you to create, update, list, get your Laravels models without creating
@@ -24,9 +27,9 @@ If model has policy (ModelPolicy in Policies directory) then it is going to be u
 If you create policy it must have three methods:
 
 ```php
-public function create(User $user)
-public function update(User $user, Model $model)
-public function delete(User $user, Model $model)
+public function createResource(User $user)
+public function updateResource(User $user, Model $model)
+public function deleteResource(User $user, Model $model)
 ```
 
 If true is returned without any condition then any signed in user can do that action.
@@ -43,7 +46,7 @@ php artisan make:resource ModelResource
 
 ### Validation
 
-If you want to validate POST (create) and PATCH (update) requests then you need to use singleton 'damianbal\Restpal\RestpalConfiguration'.
+If you want to validate POST (createResource) and PATCH (updateResource) requests then you need to use singleton 'damianbal\Restpal\RestpalConfiguration'.
 
 You can resolve RestpalConfiguration in controllers constructor or set validations in AppServiceProvider.php
 

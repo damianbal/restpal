@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Restpal 
+ * 
+ * @author Damian Balandowski (balandowski@icloud.com)
+ */
+
 namespace damianbal\Restpal;
 
 use Illuminate\Support\ServiceProvider;

@@ -110,7 +110,7 @@ class RestpalController extends BaseController
                 return ['error' => true, 'message' => 'Not signed in!'];
             }
 
-            if(!auth('api')->user()->can('create', "App\\" . $relatedModel))
+            if(!auth('api')->user()->can('createResource', "App\\" . $relatedModel))
             {
                 return ['error' => true, 'message' => 'Not authorized!'];
             }
@@ -211,7 +211,7 @@ class RestpalController extends BaseController
                 return ['error' => true, 'message' => 'Not signed in!'];
             }
 
-            if(auth('api')->user()->can('create', "App\\" . $model))
+            if(auth('api')->user()->can('createResource', "App\\" . $model))
             {
                 $model = $this->restpal->createModel($model, $request->all(), $validator);
 
@@ -270,7 +270,7 @@ class RestpalController extends BaseController
             }
 
 
-            if (auth('api')->user()->can('update', $this->restpal->getModelById($model, $id))) {
+            if (auth('api')->user()->can('updateResource', $this->restpal->getModelById($model, $id))) {
                 $model = $this->restpal->updateModel($model, $id, $request->all(), $validator);
 
                 if ($model != false || $model > 0)
@@ -334,7 +334,7 @@ class RestpalController extends BaseController
                 return ['error' => true, 'message' => 'Not signed in!'];
             }
 
-            if (auth('api')->user()->can('delete', "App\\" . $model))
+            if (auth('api')->user()->can('deleteResource', "App\\" . $model))
             {
                 return $this->restpal->deleteModel($model, $id);
             }
