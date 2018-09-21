@@ -181,7 +181,7 @@ class RestpalController extends BaseController
             }
             else
             {
-                return ['data' => $m];
+                return $m;
             }
         }
 
