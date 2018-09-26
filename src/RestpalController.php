@@ -175,6 +175,7 @@ class RestpalController extends BaseController
             $m = $this->restpal->getModels($model, $sortBy, $sortOrder, $perPage);
             $res = $this->restpal->getModelResource($model);
 
+
             if (class_exists($res))
             {
                 return $res::collection($m);

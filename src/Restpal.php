@@ -88,7 +88,17 @@ class Restpal
     public function deleteModel($model, $id)
     {
         $m = "App\\" . $model;
-        return $m::find($id)->delete();
+
+        if($m::find($id) == null) {
+            return ['success' => true];
+        }
+
+        if($m::find($id)->delete()) {
+            return ['success' => true];
+        }
+        else {
+            return ['success' => false];
+        }
     }
 
     /**
